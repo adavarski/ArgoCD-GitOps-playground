@@ -1,0 +1,12 @@
+---
+apiVersion : v1
+kind : Service
+metadata :
+  name : svc-gitops-demo
+spec :
+  selector :
+    app : gitops-demo
+  ports :
+    - name : main
+      port : 80
+      targetPort : 80
