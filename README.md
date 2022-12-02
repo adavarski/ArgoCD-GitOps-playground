@@ -47,6 +47,14 @@ kubectl apply -f argocd/apps/demo.yaml -n argocd
 
 **Note**: **[Docker Private Registry](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)** (Helm Charts: imagePullSecrets) 
 
+**Note**: **Helm 3 supports OCI for package distribution. Using Helm OCI charts and registries:**
+ 
+
+- [Use OCI-based registries](https://helm.sh/docs/topics/registries/)
+- [Deploy Helm OCI charts with ArgoCD](https://drake0103.medium.com/deploy-helm-oci-charts-with-argocd-583699c7d739)
+- [How to deploy with ArgoCD when Helm values and Chart are in different repositories](https://mixi-developers.mixi.co.jp/argocd-with-helm-fee954d1003c)
+
+
 ### Log to argocd
 ```
 kubectl -n argocd port-forward svc/argo-cd-argocd-server 8080:443
