@@ -47,7 +47,7 @@ kubectl apply -f argocd/apps/demo.yaml -n argocd
 
 **Note**: **[Docker Private Registry](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)** (Helm Charts: imagePullSecrets) 
 
-**Note**: **Helm 3 supports OCI for package distribution. Using Helm OCI charts and registries:**
+**Note**: Helm 3 supports OCI for package distribution. **Using Helm OCI charts and registries:**
  
 
 - [Use OCI-based registries](https://helm.sh/docs/topics/registries/)
