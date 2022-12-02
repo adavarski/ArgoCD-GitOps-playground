@@ -11,7 +11,7 @@ spec:
   project: default
   source:
     path: helm
-    repoURL: https://github.com/adavarski/ArgoCD-GitOps-playground/
+    repoURL: https://github.com/adavarski/ArgoCD-GitOps-playground
     targetRevision: HEAD
   syncPolicy:
     automated:
