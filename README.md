@@ -5,7 +5,7 @@ Implementing GitOps with GitHub Actions (GitOps CI) and ArgoCD (GitOps CD) to de
 
 ## Demo (simple, monorepo, KIND)
 
-Note: Simple monorepo setup. See **[CI/CD GitOps Notes](https://github.com/adavarski/ArgoCD-GitOps-demo/blob/main/README-Notes.md)** for Production-Like Deployment Strategy. 
+Note: Simple monorepo setup. See **[CI/CD GitOps Notes](./README-Notes.md)** for Production-Like Deployment Strategy. 
 
 In this simple demo we use KIND default k8s namespace for dev environment (no Sandbox/Production namespaces or separate Sandbox/Production k8s clusters and no Production-Like Deployment Strategy). Continuous Deployment is ideal for lower environments (i.e. Development) and can be triggered by a PR merge, push or even a simple commit to the application source code repository. We will using GitHub Actions to build Docker Image of the application and then push the image to DockerHub repository (a new docker image with "git_hash" tag will be created when we PR merge/push/commit to "main" branch), and then update the version of the new image in the Helm Chart present in the Git repo. As soon as there is some change in the Helm Chart, ArgoCD detects it and starts rolling out and deploying the new Helm chart in the Kubernetes cluster.
 
@@ -43,59 +43,8 @@ helm install argo-cd argocd/argocd -n argocd
 ```
 kubectl apply -f argocd/apps/demo.yaml -n argocd
 ```
+**Note**: **[GitHub private repos](./README-private-repos.md)**
 
-**Note**: For private repos use:
-- ArgoCD UI (Settings/Repositories) to add privite repo (user: GitHub Username & password: ARGOCD GitHub token generated previously) 
-- argocd CLI (argocd repo add https://github.com/GITHUB_USER/ArgoCD-GitOps-playground --username <GITHUB_USER> --password <GITHUB_ARGOCD_TOKEN>
-- teminal/kubectl 
-- etc.
-
-Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/ 
-
-```
-# Example: via kubectl 
-
-### Encode the token with base64 in terminal (ARGOCD GitHub token generated previously)
-$ echo -n ghp_2XXXXXXXXXX | base64
-ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
-
-### And user name:
-$ echo -n adavarski | base64
-YYYYYYY
-
-### Add a Kubernetes Secret in the ArgoCD Namespace: secret.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: github-access
-  namespace: argocd
-data:
-  username: YYYYYYY
-  password: ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
-
-kubectl apply -f secret.yaml -n argocd
-
-### Add its use to the argocd-cm ConfigMap:
-kubectl get cm/argocd-cm -n argocd -o yaml > argocd-cm.yaml
-
-Edit argocd-cm.yaml and add following lines:
-...
-  repositories: |
-    - url: https://github.com/adavarski/ArgoCD-GitOps-playground
-      passwordSecret:
-        name: github-access
-        key: password
-      usernameSecret:
-        name: github-access
-        key: username
-...
-kubectl apply -f argocd-cm.yaml -n argocd
-
-Check via ArgoCD CLI: argocd repocreds list
-
-### Create ArgoCD app 
-kubectl apply -f argocd/apps/demo.yaml -n argocd
-```
 
 ### Log to argocd
 ```
