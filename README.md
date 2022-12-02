@@ -1,11 +1,11 @@
 ## GitOps: CI/CD using GitHub Actions and ArgoCD on Kubernetes 
 
 **Objective:** 
-Implementing GitOps with GitHub Actions (GitOps CI) and ArgoCD (GitOps CD) to deploy Helm Charts on Kubernetes. One key ingredient to enable GitOps is to have the CI separate from CD. Once CI execution is done, the artifact will be pushed to the repository and ArgoCD will be taking care of the CD.
+Implementing GitOps with GitHub Actions (GitOps CI) and ArgoCD (GitOps CD) to deploy Helm Charts on Kubernetes. Once CI execution is done, the artifact will be pushed to the repository and ArgoCD will be taking care of the CD.
 
 ## Demo (simple, monorepo, KIND)
 
-Note: Simple monorepo setup. See **[CI/CD GitOps Notes](./README-Notes.md)** for Production-Like Deployment Strategy. 
+Note: Very Simple monorepo for CI & CD setup. One key ingredient to enable GitOps is to have the CI separate from CD, so See **[CI/CD GitOps Notes](./README-Notes.md)** for Production-Like Deployment Strategy. 
 
 In this simple demo we use KIND default k8s namespace for dev environment (no Sandbox/Production namespaces or separate Sandbox/Production k8s clusters and no Production-Like Deployment Strategy). Continuous Deployment is ideal for lower environments (i.e. Development) and can be triggered by a PR merge, push or even a simple commit to the application source code repository. We will using GitHub Actions to build Docker Image of the application and then push the image to DockerHub repository (a new docker image with "git_hash" tag will be created when we PR merge/push/commit to "main" branch), and then update the version of the new image in the Helm Chart present in the Git repo. As soon as there is some change in the Helm Chart, ArgoCD detects it and starts rolling out and deploying the new Helm chart in the Kubernetes cluster.
 
