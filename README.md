@@ -53,7 +53,6 @@ Note: For private repos use ArgoCD UI to add privite repo (user: GitHub Username
 # Example: via teminal/kubectl 
 
 ### Encode the token with base64 in terminal (ARGOCD GitHub token generated previously: repo scope)
-
 $ echo -n ghp_2XXXXXXXXXX | base64
 ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
 
@@ -62,7 +61,6 @@ $ echo -n adavarski | base64
 YYYYYYY
 
 ### Add a Kubernetes Secret in the ArgoCD Namespace: secret.yaml
-
 apiVersion: v1
 kind: Secret
 metadata:
@@ -75,7 +73,6 @@ data:
 kubectl apply -f secret.yaml -n argocd
 
 ### Add its use to the argocd-cm ConfigMap:
-
 kubectl get cm/argocd-cm -n argocd -o yaml > argocd-cm.yaml
 
 ...
@@ -88,17 +85,13 @@ kubectl get cm/argocd-cm -n argocd -o yaml > argocd-cm.yaml
         name: github-access
         key: username
 ...
-
 kubectl apply -f argocd-cm.yaml -n argocd
 
 Check via ArgoCD CLI: argocd repocreds list
 
 ### Create ArgoCD app 
-
 kubectl apply -f argocd/apps/demo.yaml -n argocd
-
 ```
-
 
 ### Log to argocd
 ```
