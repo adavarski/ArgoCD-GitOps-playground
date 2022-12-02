@@ -43,8 +43,8 @@ helm install argo-cd argocd/argocd -n argocd
 ```
 kubectl apply -f argocd/apps/demo.yaml -n argocd
 ```
-**Note**: **[GitHub private repos](./README-private-repos.md)**
-
+**Note**: **[GitHub Private Repos](./README-private-repos.md)**
+**Note**: **[Docker Private Registry](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)**  
 
 ### Log to argocd
 ```
