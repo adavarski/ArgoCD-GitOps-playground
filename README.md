@@ -1,9 +1,5 @@
 ## GitOps: CI/CD using GitHub Actions and ArgoCD on Kubernetes 
 
-TODO: Test ArgoCD (and GitHub Actions) with Private Repo(s) (ERROR: rpc error: code = Unknown desc = authentication required) 
-
-REF: https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/ 
-
 **Objective:** 
 Implementing GitOps with GitHub Actions (GitOps CI) and ArgoCD (GitOps CD) to deploy Helm Charts on Kubernetes. One key ingredient to enable GitOps is to have the CI separate from CD. Once CI execution is done, the artifact will be pushed to the repository and ArgoCD will be taking care of the CD.
 
@@ -53,6 +49,9 @@ kubectl apply -f argocd/apps/demo.yaml -n argocd
 - argocd CLI (argocd repo add https://github.com/GITHUB_USER/ArgoCD-GitOps-playground --username <GITHUB_USER> --password <GITHUB_ARGOCD_TOKEN>
 - teminal/kubectl 
 - etc.
+
+Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/ 
+
 ```
 # Example: via kubectl 
 
