@@ -45,7 +45,7 @@ kubectl apply -f argocd/apps/demo.yaml -n argocd
 ```
 **Note**: **[GitHub Private Repos](./README-private-repos.md)**
 
-**Note**: **[Docker Private Registry](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)** : Helm Charts: imagePullSecrets 
+**Note**: **[Docker Private Registry](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)** (Helm Charts: imagePullSecrets) 
 
 ### Log to argocd
 ```
