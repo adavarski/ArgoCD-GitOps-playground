@@ -106,8 +106,8 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 ```
 
 ### Check Argo UI
-<img src="pictures/argocd-apps.png?raw=true" width="900">
-<img src="pictures/argocd-app-test.png?raw=true" width="900">
+<img src="pictures/ArgoCD-app.png?raw=true" width="900">
+<img src="pictures/ArgoCD-app-details.png?raw=true" width="900">
 
 ### Check app
 ```
