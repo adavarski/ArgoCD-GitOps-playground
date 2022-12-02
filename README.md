@@ -19,7 +19,7 @@ In this simple demo we use KIND default k8s namespace for dev environment (no Sa
 
 ### Create DockerHub TOKEN & Setup GitHub Actions repository secrets
 
-Add DOCKERHUB_USER and DOCKERHUB_TOKEN secrets to application repository. You need to create a token in DockerHub first to use for the DOCKERHUB_TOKEN. Also create a GitHub token called ARGOCD and tick repo scope.
+Add DOCKERHUB_USER and DOCKERHUB_TOKEN secrets to application repository. You need to create a token in DockerHub first to use for the DOCKERHUB_TOKEN. Also create a GitHub token called ARGOCD and tick repo scope (dedicated for ArgoCD).
 
 ### Install docker, kubectl, helm, etc.
 
@@ -47,6 +47,58 @@ helm install argo-cd argocd/argocd -n argocd
 ```
 kubectl apply -f argocd/apps/demo.yaml -n argocd
 ```
+
+Note: For private repos use ArgoCD UI to add privite repo (user: GitHub Username & password: ARGOCD GitHub token generated previously) or argocd CLI or via teminal/kubectl 
+```
+# Example: via teminal/kubectl 
+
+### Encode the token with base64 in terminal (ARGOCD GitHub token generated previously: repo scope)
+
+$ echo -n ghp_2XXXXXXXXXX | base64
+ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
+
+### And user name:
+$ echo -n adavarski | base64
+YYYYYYY
+
+### Add a Kubernetes Secret in the ArgoCD Namespace: secret.yaml
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: github-access
+  namespace: argocd
+data:
+  username: YYYYYYY
+  password: ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
+
+kubectl apply -f secret.yaml -n argocd
+
+### Add its use to the argocd-cm ConfigMap:
+
+kubectl get cm/argocd-cm -n argocd -o yaml > argocd-cm.yaml
+
+...
+  repositories: |
+    - url: https://github.com/adavarski/ArgoCD-GitOps-playground
+      passwordSecret:
+        name: github-access
+        key: password
+      usernameSecret:
+        name: github-access
+        key: username
+...
+
+kubectl apply -f argocd-cm.yaml -n argocd
+
+Check via ArgoCD CLI: argocd repocreds list
+
+### Create ArgoCD app 
+
+kubectl apply -f argocd/apps/demo.yaml -n argocd
+
+```
+
 
 ### Log to argocd
 ```
