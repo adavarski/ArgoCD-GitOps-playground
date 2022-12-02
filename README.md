@@ -48,11 +48,15 @@ helm install argo-cd argocd/argocd -n argocd
 kubectl apply -f argocd/apps/demo.yaml -n argocd
 ```
 
-Note: For private repos use ArgoCD UI to add privite repo (user: GitHub Username & password: ARGOCD GitHub token generated previously) or argocd CLI or via teminal/kubectl 
+**Note**: For private repos use:
+- ArgoCD UI (Settings/Repositories) to add privite repo (user: GitHub Username & password: ARGOCD GitHub token generated previously) 
+- argocd CLI (argocd repo add https://github.com/GITHUB_USER/ArgoCD-GitOps-playground --username <GITHUB_USER> --password <GITHUB_ARGOCD_TOKEN>
+- teminal/kubectl 
+- etc.
 ```
-# Example: via teminal/kubectl 
+# Example: via kubectl 
 
-### Encode the token with base64 in terminal (ARGOCD GitHub token generated previously: repo scope)
+### Encode the token with base64 in terminal (ARGOCD GitHub token generated previously)
 $ echo -n ghp_2XXXXXXXXXX | base64
 ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
 
@@ -75,6 +79,7 @@ kubectl apply -f secret.yaml -n argocd
 ### Add its use to the argocd-cm ConfigMap:
 kubectl get cm/argocd-cm -n argocd -o yaml > argocd-cm.yaml
 
+Edit argocd-cm.yaml and add following lines:
 ...
   repositories: |
     - url: https://github.com/adavarski/ArgoCD-GitOps-playground
