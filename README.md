@@ -3,6 +3,8 @@
 **Objective:** 
 Implementing GitOps with GitHub Actions (GitOps CI) and ArgoCD (GitOps CD) to deploy Helm Charts on Kubernetes. One key ingredient to enable GitOps is to have the CI separate from CD. Once CI execution is done, the artifact will be pushed to the repository and ArgoCD will be taking care of the CD. 
 
+<img src="pictures/gitops-demo-all.webp?raw=true" width="1000">
+
 ## Demo (simple, monorepo, KIND)
 
 **Note**: Very simple monorepo for CI & CD. See **[CI/CD GitOps Notes](./README-Notes.md)** for Production-Like Deployment Strategy. 
