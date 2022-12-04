@@ -4,7 +4,7 @@
 - teminal/kubectl 
 - etc.
 
-Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/ 
+Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/ && https://argo-cd.readthedocs.io/en/latest/operator-manual/declarative-setup/#repository-credentials
 
 ```
 # Example: via kubectl 
