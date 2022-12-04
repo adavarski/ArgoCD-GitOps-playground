@@ -343,12 +343,16 @@ This workflow can be easily converted to Continuous Delivery by modifying the Gi
 When triggered by a source code modification event, the GitHub Action Workflow 1 will spring into action and build, compile, and test your application and then package it in a Docker container and publish it to a container repository. The Workflow 1 passes the Docker image name and tag as input and triggers the Workflow 2, which will update the K8s deployment manifest and commit and push the changes to the Application/K8s Configuration repository. Argo CD will be pulling this change and update the application on the K8s cluster.
 
 
-### Other ArgoCD Examples 
+### Other ArgoCD Examples
+
+- (Azure) example with GitHub Actions and ArgoCD:
+
+<img src="pictures/gitops-azure-aks-argocd.png?raw=true" width="900">
+
+
 - (AWS & GCP) examples with GitHub Actions and ArgoCD:
 
-
 <img src="pictures/ArgoCD-AWS-EKS.png?raw=true" width="900">
-
 
 <img src="pictures/ArgoCD-GCP-GKE.png?raw=true" width="900">
 
