@@ -86,6 +86,8 @@ Add DOCKERHUB_USER and DOCKERHUB_TOKEN secrets to application repository. You ne
 
 Create clusters
 
+Note: We can use kind/k3d/k3s instead of minikube also for local dev
+
 $ minikube start -p argocd --vm-driver=virtualbox --memory=2000
   Starting control plane node argocd in cluster argocd
  
@@ -263,6 +265,8 @@ Create pacman repository secret called DOCKERHUB_USER using your Docker username
 
 We will have four Kubernetes clusters which are argocd, dev, sbox and prod. ArgoCD runs on argocd cluster and deploys to other three clusters.
 
+Note: We can use kind/k3d/k3s instead of minikube also for 
+
 $ minikube start -p argocd --vm-driver=virtualbox --memory=2000
 $ minikube start -p dev --vm-driver=virtualbox --memory=2000
 $ minikube start -p sbox --vm-driver=virtualbox --memory=2000
@@ -276,6 +280,9 @@ CURRENT   NAME     CLUSTER   AUTHINFO   NAMESPACE
           sbox     sbox      sbox
 
 ### Prepare ArgoCD
+
+$ kubectl config current-context
+argocd
 
 Install ArgoCD in terminal
 
