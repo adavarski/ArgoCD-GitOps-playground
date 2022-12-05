@@ -9,7 +9,11 @@ Implementing GitOps with GitHub Actions (GitOps CI) and ArgoCD (GitOps CD) to de
 
 **Note**: Very simple monorepo for CI & CD. See **[CI/CD GitOps Notes](./README-Notes.md)** for Production-Like Deployment Strategy. 
 
-In this simple demo we use KIND default k8s namespace for dev environment (no Sandbox/Production namespaces or separate Sandbox/Production k8s clusters and no Production-Like Deployment Strategy). Continuous Deployment is ideal for lower environments (i.e. Development) and can be triggered by a PR merge, push or even a simple commit to the application source code repository. We will using GitHub Actions to build Docker Image of the application and then push the image to DockerHub repository (a new docker image with "git_hash" tag will be created when we PR merge/push/commit to "main" branch), and then update the version of the new image in the Helm Chart present in the Git repo. As soon as there is some change in the Helm Chart, ArgoCD detects it and starts rolling out and deploying the new Helm chart in the Kubernetes cluster.
+In this simple demo we use KIND default k8s namespace for DEV environment and prod namespaces for PROD environment (no separate Staging/Production k8s clusters and no Production-Like Deployment Strategy). Continuous Deployment is ideal for lower environments (i.e. Development) and can be triggered by a PR merge, push or even a simple commit to the application source code repository. 
+
+- DEV environment: We will using GitHub Actions to build Docker Image of the application and then push the image to DockerHub repository (a new docker image with "git_hash" tag will be created when we PR merge/push/commit to "main" branch), and then update the version of the new image in the Helm Chart present in the Git repo (values.yaml). As soon as there is some change in the Helm Chart, ArgoCD detects it and starts rolling out and deploying the new Helm chart in the Kubernetes cluster (default ns).
+
+- PROD environment: On git tag, GitHub Actions build Docker Image of the application and then push the image to DockerHub repository (a new docker image with tag = "git tag" will be created when we create tag to "main" branch), and then update the version of the new image in the Helm Chart present in the Git repo. As soon as there is some change in the Helm Chart (values-prod.yaml), ArgoCD detects it and starts rolling out and deploying the new Helm chart in the Kubernetes cluster (prod ns).
 
 ### GitHub Actions & ArgoCD pipeline flow (GitOps pipeline flow):
 
@@ -54,10 +58,18 @@ $ grep argocd /etc/hosts
 $ kubectl apply -f argocd/argocd/manifests/argocd-ingress.yaml
 ```
 
-### Create argocd app 
+### Create argocd app (DEV)
 ```
 $ kubectl apply -f argocd/apps/demo.yaml -n argocd
 ```
+
+### Create argocd app (PROD)
+```
+$ kubectl create ns prod
+$ kubectl apply -f argocd/apps/prod.yaml -n argocd
+
+```
+
 **Note**: **[GitHub Private Repos](./README-private-repos.md)**
 
 **Note**: **[Docker Private Registry](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)** (Helm Charts: imagePullSecrets) 
@@ -90,12 +102,70 @@ $ argocd login --insecure argocd.local --grpc-web
 $ argocd version
 ```
 
-### Check app via Argo UI & ArgoCD CLI
-<img src="pictures/ArgoCD-app-summary.png?raw=true" width="900">
-<img src="pictures/ArgoCD-app-details.png?raw=true" width="900">
+### Check apps via Argo UI & ArgoCD CLI & kubectl
+<img src="pictures/ArgoCD-apps-dev-and-prod.png?raw=true" width="900">
+<img src="pictures/ArgoCD-app-dev.png?raw=true" width="900">
+<img src="pictures/ArgoCD-app-prod.png?raw=true" width="900">
 
 ```
 $ argocd app get test
+Name:               argocd/test
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          default
+URL:                https://argocd.example.com/applications/test
+Repo:               https://github.com/adavarski/ArgoCD-GitOps-playground
+Target:             HEAD
+Path:               helm
+SyncWindow:         Sync Allowed
+Sync Policy:        Automated (Prune)
+Sync Status:        Synced to HEAD (5ee3f51)
+Health Status:      Healthy
+
+GROUP  KIND        NAMESPACE  NAME               STATUS  HEALTH   HOOK  MESSAGE
+       Service     default    test-helm-example  Synced  Healthy        service/test-helm-example unchanged
+apps   Deployment  default    test-helm-example  Synced  Healthy        deployment.apps/test-helm-example configured
+
+$ argocd app get test-prod
+Name:               argocd/test-prod
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          prod
+URL:                https://argocd.example.com/applications/test-prod
+Repo:               https://github.com/adavarski/ArgoCD-GitOps-playground
+Target:             HEAD
+Path:               helm
+Helm Values:        values-prod.yaml
+SyncWindow:         Sync Allowed
+Sync Policy:        Automated (Prune)
+Sync Status:        Synced to HEAD (5ee3f51)
+Health Status:      Healthy
+
+GROUP  KIND        NAMESPACE  NAME                    STATUS  HEALTH   HOOK  MESSAGE
+       Service     prod       test-prod-helm-example  Synced  Healthy        service/test-prod-helm-example created
+apps   Deployment  prod       test-prod-helm-example  Synced  Healthy        deployment.apps/test-prod-helm-example created
+
+$ kubectl get po -n default
+NAME                                 READY   STATUS    RESTARTS   AGE
+test-helm-example-777ff787cf-kqv4g   1/1     Running   0          12m
+$ kubectl get po -n prod
+NAME                                     READY   STATUS    RESTARTS   AGE
+test-prod-helm-example-6d875dd6c-rrz2f   1/1     Running   0          41m
+
+
+$ kubectl get pods -n prod -o jsonpath="{.items[*].spec.containers[*].image}" |\
+> tr -s '[[:space:]]' '\n' |\
+> sort |\
+> uniq -c
+      1 davarski/gitops-demo:1.0.0
+
+$ kubectl get pods -n default -o jsonpath="{.items[*].spec.containers[*].image}" |\
+> tr -s '[[:space:]]' '\n' |\
+> sort |\
+> uniq -c
+      1 davarski/gitops-demo:main-f7f0db3
+
+
 ```
 
 ### Check app
