@@ -35,11 +35,19 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
 
-      - name: Update Version
+      - name: "Echo in file"
         env:
-          TAGS: ${{ steps.meta.outputs.tags }}
+          TAGS: ${{ steps.meta.outputs.tags 
+        run: echo "$TAGS" > "tags"
+      
+      - uses: actions/upload-artifact@v3
+        name: Upload Artifact
+        with:
+          name: Tags
+          path: "tags"
+
+      - name: Update Version
         run: |
-            echo "$TAGS" > tags
             TAG=${cat tags | cut -d : -f 2}
             version=$(cat ./helm/values-prod.yaml | grep version: | awk '{print $2}')
             echo $TAG
