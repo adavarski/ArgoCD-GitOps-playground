@@ -39,7 +39,7 @@ $ helm repo add argo-cd https://argoproj.github.io/argo-helm
 $ helm dep update argocd/argocd/
 $ kubectl create ns argocd
 $ helm install argo-cd argocd/argocd -n argocd
-$ curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 & chmod +x argocd-linux-amd64 & sudo mv argocd-linux-amd64 /usr/local/bin/argocd
+$ curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 && chmod +x ./argocd-linux-amd64 && sudo mv argocd-linux-amd64 /usr/local/bin/argocd
 ```
 
 ### Create ArgoCD ingress 
