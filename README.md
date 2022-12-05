@@ -42,7 +42,7 @@ $ helm install argo-cd argocd/argocd -n argocd
 $ curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 && chmod +x ./argocd-linux-amd64 && sudo mv argocd-linux-amd64 /usr/local/bin/argocd
 ```
 
-### Create ArgoCD ingress 
+### ArgoCD ingress 
 ```
 Note: --insecure in argocd/argocd/values.yaml 
 
@@ -70,7 +70,7 @@ $ kubectl apply -f argocd/apps/demo.yaml -n argocd
 - [How to deploy with ArgoCD when Helm values and Chart are in different repositories](https://mixi-developers.mixi.co.jp/argocd-with-helm-fee954d1003c)
 
 
-### Log to argocd via ArgoCD UI (port-forward example)
+### Log to argocd via ArgoCD UI 
 ```
 Browser: http://argocd.local
 
@@ -78,20 +78,20 @@ Log as admin
 To get password:
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 
-Note: Via port-forwarding 
+Note: port-forward example 
 $ kubectl -n argocd port-forward svc/argo-cd-argocd-server 8080:443
 Browser: http://localhost:8080
 ```
 
 ### Log to argocd via ArgoCD CLI
 ```
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+$ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 $ argocd login --insecure argocd.local --grpc-web
 $ argocd version
 ```
 
 ### Check Argo UI
-<img src="pictures/ArgoCD-app.png?raw=true" width="900">
+<img src="pictures/ArgoCD-app-summary.png?raw=true" width="900">
 <img src="pictures/ArgoCD-app-details.png?raw=true" width="900">
 
 ### Check app
