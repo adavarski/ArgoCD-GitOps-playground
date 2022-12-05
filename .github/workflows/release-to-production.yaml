@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     tags:
-      - '*'
+      - 'v*'
 jobs:
   build:
     name: Build and Pushing the Image
@@ -13,6 +13,12 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+      
+    - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: davarski/gitops-demo
 
     - name: Login to DockerHub
       id: dockerhub-login
@@ -26,7 +32,7 @@ jobs:
       with:
          push: true
          file: ./Dockerfile
-         tags: davarski/gitops-demo:$git_tag
+         tags: ${{ steps.meta.outputs.tags }}
                  
     - name: Update Version
       run: |
