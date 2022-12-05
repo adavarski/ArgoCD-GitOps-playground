@@ -37,7 +37,7 @@ jobs:
           sed -i "s/$version/$TAG/" ./helm/values-prod.yaml
           
     - name: Commit and push changes
-      uses: devops-infra/action-commit-push@v0.3
+      uses: devops-infra/action-commit-push@main
       with:
         github_token: ${{ secrets.ARGOCD }}
         commit_message: Version updated
