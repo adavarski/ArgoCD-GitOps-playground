@@ -44,20 +44,7 @@ $ curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/l
 
 ### Create ArgoCD ingress 
 ```
-Check --insecure 
-
-$ cat argocd/argocd/values.yaml 
-argo-cd:
-  dex:
-    enabled: false
-  server:
-    extraArgs:
-      - --insecure
-    config:
-      repositories: |
-        - type: helm
-          name: argo-cd
-          url: https://argoproj.github.io/argo-helm
+Note: --insecure in argocd/argocd/values.yaml 
 
 Setup /etc/hosts file 
 
