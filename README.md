@@ -7,13 +7,13 @@ Implementing GitOps with GitHub Actions (GitOps CI) and ArgoCD (GitOps CD) to de
 
 ## Demo (simple, monorepo, KIND)
 
-**Note**: Very simple monorepo for CI & CD. See **[CI/CD GitOps Notes](./README-Notes.md)** for Production-Like Deployment Strategy. 
+**Note**: Very simple monorepo for CI & CD (no separate app:CI and config:CD repos). See **[CI/CD GitOps Notes](./README-Notes.md)** for Production-Like Deployment Strategy. 
 
-In this simple demo we use KIND default k8s namespace for DEV environment and prod namespaces for PROD environment (no separate Staging/Production k8s clusters and no Production-Like Deployment Strategy). Continuous Deployment is ideal for lower environments (i.e. Development) and can be triggered by a PR merge, push or even a simple commit to the application source code repository. 
+In this simple demo we use KIND "default" k8s namespace for DEV environment and "prod" namespaces for PRODUCTION environment (no separate Staging/Production k8s clusters and no Production-Like Deployment Strategy). 
 
-- DEV environment: We will using GitHub Actions to build Docker Image of the application and then push the image to DockerHub repository (a new docker image with "git_hash" tag will be created when we PR merge/push/commit to "main" branch), and then update the version of the new image in the Helm Chart present in the Git repo (values.yaml). As soon as there is some change in the Helm Chart, ArgoCD detects it and starts rolling out and deploying the new Helm chart in the Kubernetes cluster (default ns).
+- DEV environment: Continuous Deployment is ideal for lower environments (i.e. Development) and can be triggered by a PR merge, push or even a simple commit to the application source code repository. We will using GitHub Actions to build Docker Image of the application and then push the image to DockerHub repository (a new docker image with "git_hash" tag will be created when we PR merge/push/commit to "main" branch), and then update the version of the new image in the Helm Chart present in the Git repo (values.yaml). As soon as there is some change in the Helm Chart, ArgoCD detects it and starts rolling out and deploying the new Helm chart in the Kubernetes cluster ("default" k8s ns). 
 
-- PROD environment: On git tag, GitHub Actions build Docker Image of the application and then push the image to DockerHub repository (a new docker image with tag = "git tag" will be created when we create tag to "main" branch), and then update the version of the new image in the Helm Chart present in the Git repo. As soon as there is some change in the Helm Chart (values-prod.yaml), ArgoCD detects it and starts rolling out and deploying the new Helm chart in the Kubernetes cluster (prod ns).
+- PRODUCTON environment: On "git tag", GitHub Actions build Docker Image of the application and then push the image to DockerHub repository (a new docker image with tag = "git tag <tagname>" will be created when we create tag to "main" branch, example: 1.0.0), and then update the version of the new image in the Helm Chart present in the Git repo (values-prod.yaml). As soon as there is some change in the Helm Chart, ArgoCD detects it and starts rolling out and deploying the new Helm chart in the Kubernetes cluster ("prod" k8s ns).
 
 ### GitHub Actions & ArgoCD pipeline flow (GitOps pipeline flow):
 
@@ -103,6 +103,7 @@ $ argocd version
 ```
 
 ### Check apps via Argo UI & ArgoCD CLI & kubectl
+ 
 <img src="pictures/ArgoCD-apps-dev-and-prod.png?raw=true" width="900">
 <img src="pictures/ArgoCD-app-dev.png?raw=true" width="900">
 <img src="pictures/ArgoCD-app-prod.png?raw=true" width="900">
