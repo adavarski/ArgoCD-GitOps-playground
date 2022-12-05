@@ -90,15 +90,18 @@ $ argocd login --insecure argocd.local --grpc-web
 $ argocd version
 ```
 
-### Check Argo UI
+### Check app via Argo UI & ArgoCD CLI
 <img src="pictures/ArgoCD-app-summary.png?raw=true" width="900">
 <img src="pictures/ArgoCD-app-details.png?raw=true" width="900">
+
+$ argocd app get test
 
 ### Check app
 ```
 kubectl -n default port-forward svc/test-helm-example 9999:80
 ```
 <img src="pictures/GitOps-app.png?raw=true" width="900">
+
 
 
 ### Clean environment
