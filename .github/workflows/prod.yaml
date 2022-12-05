@@ -37,7 +37,7 @@ jobs:
 
       - name: "Echo in file"
         env:
-          TAGS: ${{ steps.meta.outputs.tags 
+          TAGS: ${{ steps.meta.outputs.tags }}
         run: echo "$TAGS" > "tags"
       
       - uses: actions/upload-artifact@v3
