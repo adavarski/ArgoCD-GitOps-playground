@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   pullPolicy: IfNotPresent
   repository: davarski/gitops-demo
-  version: main-55341d1
+  version: main-c1e5feb
 
 imagePullSecrets: []
 nameOverride: ""
