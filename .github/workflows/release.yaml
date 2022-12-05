@@ -27,14 +27,12 @@ jobs:
       id: build-image
       run: |
         # Build a docker container and push it to DockerHub
-        release=${{ github.event.release.tag_name }}
         docker build -t davarski/gitops-demo:$release .
         echo "Pushing image to DockeHub..."
         docker push davarski/gitops-demo:$release
         
     - name: Update Version
       run: |
-          release=${{ github.event.release.tag_name }}
           version=$(cat ./helm/values-prod.yaml | grep version: | awk '{print $2}')
           sed -i "s/$version/$release/" ./helm/values-prod.yaml
           
