@@ -29,13 +29,12 @@ jobs:
          push: true
          file: ./Dockerfile
          tags: davarski/gitops-demo:${{ github.event.release.tag_name }}
-         build-args: VER=${{ github.event.release.tag_name }}
-        
+                 
     - name: Update Version
       run: |
-          VER=${{ github.event.release.tag_name }}
+          TAG=${{ github.event.release.tag_name }}
           version=$(cat ./helm/values-prod.yaml | grep version: | awk '{print $2}')
-          sed -i "s/$version/$VER/" ./helm/values-prod.yaml
+          sed -i "s/$version/$TAG/" ./helm/values-prod.yaml
           
     - name: Commit and push changes
       uses: devops-infra/action-commit-push@v0.3
