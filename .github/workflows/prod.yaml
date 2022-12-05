@@ -57,4 +57,5 @@ jobs:
         uses: devops-infra/action-commit-push@v0.3
         with:
           github_token: ${{ secrets.ARGOCD }}
+          force: true
           commit_message: Version updated
