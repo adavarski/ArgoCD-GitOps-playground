@@ -27,10 +27,10 @@ data:
   username: YYYYYYY
   password: ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
 
-kubectl apply -f secret.yaml -n argocd
+$ kubectl apply -f secret.yaml -n argocd
 
 ### Add its use to the argocd-cm ConfigMap:
-kubectl get cm/argocd-cm -n argocd -o yaml > argocd-cm.yaml
+$ kubectl get cm/argocd-cm -n argocd -o yaml > argocd-cm.yaml
 
 Edit argocd-cm.yaml and add following lines:
 ...
@@ -43,10 +43,10 @@ Edit argocd-cm.yaml and add following lines:
         name: github-access
         key: username
 ...
-kubectl apply -f argocd-cm.yaml -n argocd
+$ kubectl apply -f argocd-cm.yaml -n argocd
 
 Check via ArgoCD CLI: argocd repocreds list
 
 ### Create ArgoCD app 
-kubectl apply -f argocd/apps/demo.yaml -n argocd
+$ kubectl apply -f argocd/apps/demo.yaml -n argocd
 ```
