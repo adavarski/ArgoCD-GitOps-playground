@@ -1,10 +1,10 @@
 name: Release-to-Production
  
 on:
-  release:
-    types:
-      - released
-
+  push:
+    branches: [ main ]
+    tags:
+      - '*'
 jobs:
   build:
     name: Build and Pushing the Image
