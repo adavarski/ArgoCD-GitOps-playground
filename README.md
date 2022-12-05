@@ -93,6 +93,7 @@ $ argocd version
 ### Check app via Argo UI & ArgoCD CLI
 <img src="pictures/ArgoCD-app-summary.png?raw=true" width="900">
 <img src="pictures/ArgoCD-app-details.png?raw=true" width="900">
+
 ```
 $ argocd app get test
 ```
