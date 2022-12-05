@@ -23,27 +23,53 @@ Add DOCKERHUB_USER and DOCKERHUB_TOKEN secrets to application repository. You ne
 
 ### Instal KIND & Create cluster (CNI=Calico, Enable ingress)
 ```
-curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.14.0/kind-linux-amd64 && chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind
-cd KIND/
-kind create cluster --name gitops --config cluster-config.yaml
-kind get kubeconfig --name="gitops" > admin.conf
-export KUBECONFIG=./admin.conf 
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
-kubectl -n kube-system set env daemonset/calico-node FELIX_IGNORELOOSERPF=true
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+$ curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.14.0/kind-linux-amd64 && chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind
+$ cd KIND/
+$ kind create cluster --name gitops --config cluster-config.yaml
+$ kind get kubeconfig --name="gitops" > admin.conf
+$ export KUBECONFIG=./admin.conf 
+$ kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+$ kubectl -n kube-system set env daemonset/calico-node FELIX_IGNORELOOSERPF=true
+$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 ```
 
-### Install argocd (in-cluster)
+### Install argocd (in-cluster) and argocd CLI
 ```
-helm repo add argo-cd https://argoproj.github.io/argo-helm
-helm dep update argocd/argocd/
-kubectl create ns argocd
-helm install argo-cd argocd/argocd -n argocd
+$ helm repo add argo-cd https://argoproj.github.io/argo-helm
+$ helm dep update argocd/argocd/
+$ kubectl create ns argocd
+$ helm install argo-cd argocd/argocd -n argocd
+$ curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 & chmod +x argocd-linux-amd64 & sudo mv argocd-linux-amd64 /usr/local/bin/argocd
+```
+
+### Create ArgoCD ingress 
+```
+Check --insecure 
+
+$ cat argocd/argocd/values.yaml 
+argo-cd:
+  dex:
+    enabled: false
+  server:
+    extraArgs:
+      - --insecure
+    config:
+      repositories: |
+        - type: helm
+          name: argo-cd
+          url: https://argoproj.github.io/argo-helm
+
+Setup /etc/hosts file 
+
+$ grep argocd /etc/hosts
+127.0.0.1	localhost argocd.local
+
+$ kubectl apply -f argocd/argocd/manifests/argocd-ingress.yaml
 ```
 
 ### Create argocd app 
 ```
-kubectl apply -f argocd/apps/demo.yaml -n argocd
+$ kubectl apply -f argocd/apps/demo.yaml -n argocd
 ```
 **Note**: **[GitHub Private Repos](./README-private-repos.md)**
 
@@ -57,12 +83,24 @@ kubectl apply -f argocd/apps/demo.yaml -n argocd
 - [How to deploy with ArgoCD when Helm values and Chart are in different repositories](https://mixi-developers.mixi.co.jp/argocd-with-helm-fee954d1003c)
 
 
-### Log to argocd
+### Log to argocd via ArgoCD UI (port-forward example)
 ```
-kubectl -n argocd port-forward svc/argo-cd-argocd-server 8080:443
+Browser: http://argocd.local
+
 Log as admin
 To get password:
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+
+Note: Via port-forwarding 
+$ kubectl -n argocd port-forward svc/argo-cd-argocd-server 8080:443
+Browser: http://localhost:8080
+```
+
+### Log to argocd via ArgoCD CLI
+```
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+$ argocd login --insecure argocd.local --grpc-web
+$ argocd version
 ```
 
 ### Check Argo UI
