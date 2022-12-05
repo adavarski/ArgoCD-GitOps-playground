@@ -37,7 +37,8 @@ jobs:
 
       - name: Update Version
         run: |
-            TAG=${{ steps.meta.outputs.tags }}
+            TMP=${{ steps.meta.outputs.tags }}
+            TAG=${echo $TMP | cut -d : -f 2}
             version=$(cat ./helm/values-prod.yaml | grep version: | awk '{print $2}')
             sed -i "s/$version/$TAG/" ./helm/values-prod.yaml
           
