@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     tags:
       - 'v*'
+      
 jobs:
   build:
     name: Build and Pushing the Image
