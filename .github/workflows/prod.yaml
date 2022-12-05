@@ -48,7 +48,7 @@ jobs:
 
       - name: Update Version
         run: |
-            TAG=${cat tags | cut -d : -f 2}
+            TAG=$(cat tags | cut -d : -f 2)
             version=$(cat ./helm/values-prod.yaml | grep version: | awk '{print $2}')
             echo $TAG
             sed -i "s/$version/$TAG/" ./helm/values-prod.yaml
