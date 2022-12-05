@@ -20,7 +20,7 @@ jobs:
         with:
           images: davarski/gitops-demo
           tags: |
-            type=raw,value={{sha}},enable=${{ github.ref_type = 'tag' }}
+            type=semver,pattern={{version}}
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
