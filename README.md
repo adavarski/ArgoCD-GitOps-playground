@@ -7,7 +7,7 @@ Implementing GitOps with GitHub Actions (GitOps CI) and ArgoCD (GitOps CD) to de
 
 ## Demo (simple, monorepo, KIND)
 
-**Note**: Very simple monorepo for CI & CD (no separate app:CI and config:CD repos). See **[CI/CD GitOps Notes](./README-Notes.md)** for Production-Like Deployment Strategy. 
+**Note**: Very simple monorepo for CI & CD (no separate app/s:CI and config:CD repo/s:ArgoCD apps manifests). See **[CI/CD GitOps Notes](./README-Notes.md)** for Production-Like Deployment Strategy. 
 
 In this simple demo we use KIND "default" k8s namespace for DEV environment and "prod" namespaces for PRODUCTION environment (no separate Staging/Production k8s clusters and no Production-Like Deployment Strategy). 
 
