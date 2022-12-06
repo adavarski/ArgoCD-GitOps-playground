@@ -5,7 +5,7 @@ Implementing GitOps with GitHub Actions (GitOps CI) and ArgoCD (GitOps CD) to de
 
 <img src="pictures/gitops-demo-all.webp?raw=true" width="1000">
 
-## Demo (simple, monorepo, KIND: single cluster)
+## Demo1 (simple, monorepo, KIND: single cluster)
 
 **Note**: Very simple monorepo for CI & CD (no separate app/s:CI and config:CD repo/s:ArgoCD apps manifests). See **[CI/CD GitOps Notes](./README-Notes.md)** for Production-Like Deployment Strategy. 
 
@@ -198,7 +198,7 @@ $ kubectl get pods -n default -o jsonpath="{.items[*].spec.containers[*].image}"
 
 ### Check app
 ```
-kubectl -n default port-forward svc/test-helm-example 9999:80
+$ kubectl -n default port-forward svc/test-helm-example 9999:80
 ```
 <img src="pictures/GitOps-app.png?raw=true" width="900">
 
@@ -206,11 +206,12 @@ kubectl -n default port-forward svc/test-helm-example 9999:80
 ### Clean environment
 
 ```
-kind delete cluster --name=gitops
+$ kind delete cluster --name=gitops
 ```
+ 
+## Demo2 (simple, monorepo, KIND: multiple cluster)
 
-## Demo (simple, monorepo, KIND: multiple cluster)
-
+Deployment Strategy (Production-Like):
 
 <img src="pictures/Deployment-Strategy-KIND.png?raw=true" width="1000">
 
@@ -221,11 +222,13 @@ $ kind get kubeconfig --name="gitops" > kind-giops.conf
 $ export KUBECONFIG="./kind-prod.conf:./kind-giops.conf"
 $ kubectl config view --flatten > ./kind-clusters.conf
 
-$ export KUBECONFIG=~/Documents/ArgoCD-GitOps/ArgoCD-GitOps-playground/kind-clusters.conf
+$ export KUBECONFIG=./kind-clusters.conf
 $ kubectl config set current-context kind-prod
 $ kubectl get endpoints
 NAME         ENDPOINTS         AGE
 kubernetes   172.18.0.4:6443   129m
+$ cp kind-clusters.conf kind-clusters.conf.ORIG
+$ vi kind-clusters.conf (Getting ArgoCD working: argocd cluster add)
 $ diff kind-clusters.conf kind-clusters.conf.ORIG
 9c9
 <     server: https://172.18.0.4:6443
@@ -271,7 +274,8 @@ users:
   user:
     client-certificate-data: REDACTED
     client-key-data: REDACTED
-$ argocd cluster add kind-prod
+
+ $ argocd cluster add kind-prod
 WARNING: This will create a service account `argocd-manager` on the cluster referenced by context `kind-prod` with full cluster level privileges. Do you want to continue [y/N]? y
 INFO[0010] ServiceAccount "argocd-manager" created in namespace "kube-system" 
 INFO[0010] ClusterRole "argocd-manager-role" created    
@@ -287,11 +291,9 @@ $ kubectl get po
 NAME                                              READY   STATUS    RESTARTS   AGE
 test-prod-cluster-helm-example-84b4bbc848-xvs2q   1/1     Running   0          4m39s
 
-
 ```
 
-
-### Check apps via Argo UI & ArgoCD CLI & kubectl on production cluster
+### Check app via Argo UI & ArgoCD CLI & kubectl on production cluster
 
 <img src="pictures/ArgoCD-multi-cluster-setup-Clusters.png?raw=true" width="900">
 <img src="pictures/ArgoCD-multi-cluster-setup-apps.png?raw=true" width="900">
@@ -320,4 +322,9 @@ apps   Deployment  default    test-prod-cluster-helm-example  Synced  Healthy   
 
 $ kubectl get pods -n default -o jsonpath="{.items[*].spec.containers[*].image}" |tr -s '[[:space:]]' '\n' |sort |uniq -c
       1 davarski/gitops-demo:1.0.0
+```
+### Clean environment
+```
+$ kind delete cluster --name=gitops
+$ kind delete cluster --name=prod
 ```
