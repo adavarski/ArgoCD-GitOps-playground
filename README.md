@@ -9,7 +9,9 @@ Implementing GitOps with GitHub Actions (GitOps CI) and ArgoCD (GitOps CD) to de
 
 **Note**: Very simple monorepo for CI & CD (no separate app/s:CI and config:CD repo/s:ArgoCD apps manifests). See **[CI/CD GitOps Notes](./README-Notes.md)** for Production-Like Deployment Strategy. 
 
-In this simple demo we use KIND "default" k8s namespace for DEV environment and "prod" namespaces for PRODUCTION environment (no separate Staging/Production k8s clusters and no Production-Like Deployment Strategy). 
+In this simple demo we use KIND "default" k8s namespace for DEV environment and "prod" namespaces for PRODUCTION environment QA testing (Staging environment) 
+
+Note: no separate Staging/Production k8s clusters and no Production-Like Deployment Strategy. 
 
 - DEV environment: Continuous Deployment is ideal for lower environments (i.e. Development) and can be triggered by a PR merge, push or even a simple commit to the application source code repository. We will using GitHub Actions to build Docker Image of the application and then push the image to DockerHub repository (a new docker image with "git_hash" tag will be created when we PR merge/push/commit to "main" branch), and then update the version of the new image in the Helm Chart present in the Git repo (values.yaml). As soon as there is some change in the Helm Chart, ArgoCD detects it and starts rolling out and deploying the new Helm chart in the Kubernetes cluster ("default" k8s ns). 
 
@@ -65,7 +67,7 @@ $ kubectl apply -f argocd/argocd/manifests/argocd-ingress.yaml
 $ kubectl apply -f argocd/apps/demo.yaml -n argocd
 ```
 
-### Create argocd app (PROD)
+### Create argocd app (PROD: QA Staging)
 ```
 Note Pre: Create git tag on "main" branch (example: 1.0.0) to buid docker image and update helm chart via GitHub Action (prod.yaml workflow)  
 $ kubectl create ns prod
@@ -211,12 +213,15 @@ $ kind delete cluster --name=gitops
  
 ## Demo2 (simple, monorepo, KIND: multiple cluster)
 
-Deployment Strategy (Production-Like):
+Deployment Strategy (Production-Like Deployment Strategy):
 
 <img src="pictures/Deployment-Strategy-KIND.png?raw=true" width="1000">
 
 ```
+### Create production cluster
 $ kind create cluster --name gitops
+
+### Using multiple kubeconfig files and how to merge to a single (Getting ArgoCD working in KinD)
 $ kind get kubeconfig --name="prod" > kind-prod.conf
 $ kind get kubeconfig --name="gitops" > kind-giops.conf
 $ export KUBECONFIG="./kind-prod.conf:./kind-giops.conf"
@@ -275,7 +280,8 @@ users:
     client-certificate-data: REDACTED
     client-key-data: REDACTED
 
- $ argocd cluster add kind-prod
+### Add production cluster to ArgoCD
+$ argocd cluster add kind-prod
 WARNING: This will create a service account `argocd-manager` on the cluster referenced by context `kind-prod` with full cluster level privileges. Do you want to continue [y/N]? y
 INFO[0010] ServiceAccount "argocd-manager" created in namespace "kube-system" 
 INFO[0010] ClusterRole "argocd-manager-role" created    
@@ -283,14 +289,19 @@ INFO[0010] ClusterRoleBinding "argocd-manager-role-binding" created
 INFO[0015] Created bearer token secret for ServiceAccount "argocd-manager" 
 Cluster 'https://172.18.0.4:6443' added
 
+### Create argocd app (PROD)
+
 $ kubectl apply -f argocd/apps/prod-cluster.yaml -n argocd
 application.argoproj.io/test-prod-cluster created
 $ kubectl config set current-context kind-prod
 Property "current-context" set.
+
+### Check app via kubectl
 $ kubectl get po
 NAME                                              READY   STATUS    RESTARTS   AGE
 test-prod-cluster-helm-example-84b4bbc848-xvs2q   1/1     Running   0          4m39s
-
+$ kubectl get pods -n default -o jsonpath="{.items[*].spec.containers[*].image}" |tr -s '[[:space:]]' '\n' |sort |uniq -c
+      1 davarski/gitops-demo:1.0.0
 ```
 
 ### Check app via Argo UI & ArgoCD CLI & kubectl on production cluster
@@ -319,9 +330,6 @@ GROUP  KIND        NAMESPACE  NAME                            STATUS  HEALTH   H
        Service     default    test-prod-cluster-helm-example  Synced  Healthy        service/test-prod-cluster-helm-example created
 apps   Deployment  default    test-prod-cluster-helm-example  Synced  Healthy        deployment.apps/test-prod-cluster-helm-example created
 
-
-$ kubectl get pods -n default -o jsonpath="{.items[*].spec.containers[*].image}" |tr -s '[[:space:]]' '\n' |sort |uniq -c
-      1 davarski/gitops-demo:1.0.0
 ```
 ### Clean environment
 ```
