@@ -15,7 +15,7 @@ In this simple demo we use KIND "default" k8s namespace for DEV environment and 
 
 - PRODUCTON environment: On "git tag", GitHub Actions build Docker Image of the application and then push the image to DockerHub repository (a new docker image with tag = "git tag <tagname>" will be created when we create tag to "main" branch, example: 1.0.0), and then update the version of the new image in the Helm Chart present in the Git repo (values-prod.yaml). As soon as there is some change in the Helm Chart, ArgoCD detects it and starts rolling out and deploying the new Helm chart in the Kubernetes cluster ("prod" k8s ns).
 
-**Note**: KIND (k8s in docker) is a tool for running local Kubernetes clusters using Docker container “nodes”. KIND was primarily designed for testing Kubernetes itself, but may be used for local development or CI.
+**Note**: KIND (k8s in docker) is a tool for running local Kubernetes clusters using Docker container “nodes”. KIND was primarily designed for testing Kubernetes itself, but may be used for local development or CI. Ref: **[KIND](./KIND/README.md)** 
  
 ### GitHub Actions & ArgoCD pipeline flow (GitOps pipeline flow):
 
