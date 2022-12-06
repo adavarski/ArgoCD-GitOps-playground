@@ -65,6 +65,7 @@ $ kubectl apply -f argocd/apps/demo.yaml -n argocd
 
 ### Create argocd app (PROD)
 ```
+Note Pre: Create git tag on "main" branch (example: 1.0.0) to buid docker image and update helm chart via GitHub Action (prod.yaml workflow)  
 $ kubectl create ns prod
 $ kubectl apply -f argocd/apps/prod.yaml -n argocd
 
