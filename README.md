@@ -99,7 +99,31 @@ Browser: http://localhost:8080
 ```
 $ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 $ argocd login --insecure argocd.local --grpc-web
+Username: admin
+Password: 
+'admin:login' logged in successfully
+Context 'argocd.local' updated 
+ 
 $ argocd version
+argocd: v2.5.2+148d8da
+  BuildDate: 2022-11-07T17:06:04Z
+  GitCommit: 148d8da7a996f6c9f4d102fdd8e688c2ff3fd8c7
+  GitTreeState: clean
+  GoVersion: go1.18.7
+  Compiler: gc
+  Platform: linux/amd64
+argocd-server: v2.3.2+ecc2af9
+  BuildDate: 2022-03-23T00:40:57Z
+  GitCommit: ecc2af9dcaa12975e654cde8cbbeaffbb315f75c
+  GitTreeState: clean
+  GoVersion: go1.17.6
+  Compiler: gc
+  Platform: linux/amd64
+  Kustomize Version: v4.4.1 2021-11-11T23:36:27Z
+  Helm Version: v3.8.0+gd141386
+  Kubectl Version: v0.23.1
+  Jsonnet Version: v0.18.0
+
 ```
 
 ### Check apps via Argo UI & ArgoCD CLI & kubectl
