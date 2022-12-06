@@ -5,7 +5,7 @@ Implementing GitOps with GitHub Actions (GitOps CI) and ArgoCD (GitOps CD) to de
 
 <img src="pictures/gitops-demo-all.webp?raw=true" width="1000">
 
-## Demo (simple, monorepo, KIND)
+## Demo (simple, monorepo, KIND: single cluster)
 
 **Note**: Very simple monorepo for CI & CD (no separate app/s:CI and config:CD repo/s:ArgoCD apps manifests). See **[CI/CD GitOps Notes](./README-Notes.md)** for Production-Like Deployment Strategy. 
 
@@ -91,7 +91,7 @@ Browser: http://argocd.local
 
 Log as admin
 To get password:
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+$ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 
 Note: port-forward example 
 $ kubectl -n argocd port-forward svc/argo-cd-argocd-server 8080:443
@@ -207,4 +207,117 @@ kubectl -n default port-forward svc/test-helm-example 9999:80
 
 ```
 kind delete cluster --name=gitops
+```
+
+## Demo (simple, monorepo, KIND: multiple cluster)
+
+
+<img src="pictures/Deployment-Strategy-KIND.png?raw=true" width="1000">
+
+```
+$ kind create cluster --name gitops
+$ kind get kubeconfig --name="prod" > kind-prod.conf
+$ kind get kubeconfig --name="gitops" > kind-giops.conf
+$ export KUBECONFIG="./kind-prod.conf:./kind-giops.conf"
+$ kubectl config view --flatten > ./kind-clusters.conf
+
+$ export KUBECONFIG=~/Documents/ArgoCD-GitOps/ArgoCD-GitOps-playground/kind-clusters.conf
+$ kubectl config set current-context kind-prod
+$ kubectl get endpoints
+NAME         ENDPOINTS         AGE
+kubernetes   172.18.0.4:6443   129m
+$ diff kind-clusters.conf kind-clusters.conf.ORIG
+9c9
+<     server: https://172.18.0.4:6443
+---
+>     server: https://127.0.0.1:37295
+$ kubectl config set current-context kind-gitops
+Property "current-context" set.
+$ kubectl config current-context
+kind-gitops
+$ kubectl config get-contexts
+CURRENT   NAME          CLUSTER       AUTHINFO      NAMESPACE
+*         kind-gitops   kind-gitops   kind-gitops   
+          kind-prod     kind-prod     kind-prod 
+$ kubectl config view
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://127.0.0.1:37213
+  name: kind-gitops
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://172.18.0.4:6443
+  name: kind-prod
+contexts:
+- context:
+    cluster: kind-gitops
+    user: kind-gitops
+  name: kind-gitops
+- context:
+    cluster: kind-prod
+    user: kind-prod
+  name: kind-prod
+current-context: kind-gitops
+kind: Config
+preferences: {}
+users:
+- name: kind-gitops
+  user:
+    client-certificate-data: REDACTED
+    client-key-data: REDACTED
+- name: kind-prod
+  user:
+    client-certificate-data: REDACTED
+    client-key-data: REDACTED
+$ argocd cluster add kind-prod
+WARNING: This will create a service account `argocd-manager` on the cluster referenced by context `kind-prod` with full cluster level privileges. Do you want to continue [y/N]? y
+INFO[0010] ServiceAccount "argocd-manager" created in namespace "kube-system" 
+INFO[0010] ClusterRole "argocd-manager-role" created    
+INFO[0010] ClusterRoleBinding "argocd-manager-role-binding" created 
+INFO[0015] Created bearer token secret for ServiceAccount "argocd-manager" 
+Cluster 'https://172.18.0.4:6443' added
+
+$ kubectl apply -f argocd/apps/prod-cluster.yaml -n argocd
+application.argoproj.io/test-prod-cluster created
+$ kubectl config set current-context kind-prod
+Property "current-context" set.
+$ kubectl get po
+NAME                                              READY   STATUS    RESTARTS   AGE
+test-prod-cluster-helm-example-84b4bbc848-xvs2q   1/1     Running   0          4m39s
+
+
+```
+
+
+### Check apps via Argo UI & ArgoCD CLI & kubectl on production cluster
+
+<img src="pictures/ArgoCD-multi-cluster-setup-Clusters.png?raw=true" width="900">
+<img src="pictures/ArgoCD-multi-cluster-setup-apps.png?raw=true" width="900">
+<img src="pictures/ArgoCD-multi-cluster-setup-prod-app.png?raw=true" width="900">
+
+```
+$ argocd app get test-prod-cluster
+Name:               argocd/test-prod-cluster
+Project:            default
+Server:             kind-prod
+Namespace:          default
+URL:                https://argocd.example.com/applications/test-prod-cluster
+Repo:               https://github.com/adavarski/ArgoCD-GitOps-playground
+Target:             HEAD
+Path:               helm
+Helm Values:        values-prod.yaml
+SyncWindow:         Sync Allowed
+Sync Policy:        Automated (Prune)
+Sync Status:        Synced to HEAD (04660d6)
+Health Status:      Healthy
+
+GROUP  KIND        NAMESPACE  NAME                            STATUS  HEALTH   HOOK  MESSAGE
+       Service     default    test-prod-cluster-helm-example  Synced  Healthy        service/test-prod-cluster-helm-example created
+apps   Deployment  default    test-prod-cluster-helm-example  Synced  Healthy        deployment.apps/test-prod-cluster-helm-example created
+
+
+$ kubectl get pods -n default -o jsonpath="{.items[*].spec.containers[*].image}" |tr -s '[[:space:]]' '\n' |sort |uniq -c
+      1 davarski/gitops-demo:1.0.0
 ```
