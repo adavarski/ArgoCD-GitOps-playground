@@ -5,7 +5,7 @@ Implementing GitOps with GitHub Actions (GitOps CI) and ArgoCD (GitOps CD) to de
 
 <img src="pictures/gitops-demo-all.webp?raw=true" width="1000">
 
-## Demo1 (simple, monorepo, KIND: single cluster, Production-Like Deployment Strategy = NO)
+## Demo1 (simple, monorepo, KIND: single k8s cluster, NO Production-Like Deployment Strategy)
 
 **Note**: Very simple monorepo for CI & CD (no separate app/s:CI and config:CD repo/s:ArgoCD apps manifests). See **[CI/CD GitOps Notes](./README-Notes.md)** for Production-Like Deployment Strategy. 
 
@@ -211,7 +211,7 @@ $ kubectl -n default port-forward svc/test-helm-example 9999:80
 $ kind delete cluster --name=gitops
 ```
  
-## Demo2 (simple, monorepo, KIND: multiple cluster, Production-Like Deployment Strategy)
+## Demo2 (simple, monorepo, KIND: multiple k8s cluster, Production-Like Deployment Strategy)
 
 Deployment Strategy (Production-Like):
 
