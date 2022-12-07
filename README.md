@@ -213,20 +213,22 @@ $ kind delete cluster --name=gitops
  
 ## Demo2 (simple, monorepo, KIND: multiple cluster, Production-Like Deployment Strategy)
 
-Deployment Strategy (Production-Like Deployment Strategy):
+Deployment Strategy (Production-Like):
 
 <img src="pictures/Deployment-Strategy-KIND.png?raw=true" width="1000">
 
-```
+
 ### Create production cluster
+```
 $ kind create cluster --name gitops
+```
 
 ### Using multiple kubeconfig files and how to merge to a single (Getting ArgoCD working in KinD)
+```
 $ kind get kubeconfig --name="prod" > kind-prod.conf
 $ kind get kubeconfig --name="gitops" > kind-giops.conf
 $ export KUBECONFIG="./kind-prod.conf:./kind-giops.conf"
 $ kubectl config view --flatten > ./kind-clusters.conf
-
 $ export KUBECONFIG=./kind-clusters.conf
 $ kubectl config set current-context kind-prod
 $ kubectl get endpoints
@@ -279,8 +281,10 @@ users:
   user:
     client-certificate-data: REDACTED
     client-key-data: REDACTED
+```
 
 ### Add production cluster to ArgoCD
+```
 $ argocd cluster add kind-prod
 WARNING: This will create a service account `argocd-manager` on the cluster referenced by context `kind-prod` with full cluster level privileges. Do you want to continue [y/N]? y
 INFO[0010] ServiceAccount "argocd-manager" created in namespace "kube-system" 
@@ -288,9 +292,10 @@ INFO[0010] ClusterRole "argocd-manager-role" created
 INFO[0010] ClusterRoleBinding "argocd-manager-role-binding" created 
 INFO[0015] Created bearer token secret for ServiceAccount "argocd-manager" 
 Cluster 'https://172.18.0.4:6443' added
+```
 
 ### Create argocd app (PROD)
-
+```
 $ kubectl apply -f argocd/apps/prod-cluster.yaml -n argocd
 application.argoproj.io/test-prod-cluster created
 $ kubectl config set current-context kind-prod
