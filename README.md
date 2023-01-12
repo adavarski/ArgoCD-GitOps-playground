@@ -222,7 +222,7 @@ Deployment Strategy (Production-Like):
 
 ### Create production cluster
 ```
-$ kind create cluster --name gitops
+$ kind create cluster --name prod
 ```
 
 ### Using multiple kubeconfig files and how to merge to a single (Getting ArgoCD working in KinD)
