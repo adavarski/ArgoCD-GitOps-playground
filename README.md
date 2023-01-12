@@ -31,13 +31,15 @@ Add DOCKERHUB_USER and DOCKERHUB_TOKEN secrets to application repository. You ne
 
 ### Instal KIND & Create cluster (CNI=Calico, Enable ingress)
 ```
-$ curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.14.0/kind-linux-amd64 && chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind
+$ curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.14.0/kind-linux-amd64 && chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind (Note: k8s v1.24.0)
+$ curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.17.0/kind-linux-amd64 && chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind (Note: k8s v1.25.3)
+
 $ cd KIND/
 $ kind create cluster --name gitops --config cluster-config.yaml
 $ kind get kubeconfig --name="gitops" > admin.conf
 $ export KUBECONFIG=./admin.conf 
 $ kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
-$ kubectl -n kube-system set env daemonset/calico-node FELIX_IGNORELOOSERPF=true
+$ kubectl -n kube-system set env daemonset/calico-node FELIX_IGNORELOOSERPF=true (kind: v0.14.0 & k8s v1.24.0 only)
 $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 ```
 
