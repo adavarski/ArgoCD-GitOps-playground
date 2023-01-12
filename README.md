@@ -206,13 +206,6 @@ $ kubectl -n default port-forward svc/test-helm-example 9999:80
 ```
 <img src="pictures/GitOps-app.png?raw=true" width="900">
 
-
-### Clean environment
-
-```
-$ kind delete cluster --name=gitops
-```
- 
 ## Demo2 (simple, monorepo, KIND: multiple k8s cluster, Production-Like Deployment Strategy)
 
 Deployment Strategy (Production-Like):
