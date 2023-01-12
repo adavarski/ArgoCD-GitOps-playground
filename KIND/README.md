@@ -14,13 +14,15 @@ References:
 KIND Source: https://github.com/kubernetes-sigs/kind (https://github.com/kubernetes-sigs/kind/tree/main/images/base)
 
 
-### Install KIND
+### Install KIND 
 ```
 ### Install docker, kubectl, etc.
 
-### Instal KIND
+### Instal KIND 
 
-$ curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.14.0/kind-linux-amd64 && chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind
+$ curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.14.0/kind-linux-amd64 && chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind (Note: k8s v1.24.0)
+
+$ curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.17.0/kind-linux-amd64 && chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind (Note: k8s v1.25.3)
 ```
 ### Create cluster (CNI=Calico, Enable ingress)
 
@@ -51,7 +53,7 @@ networking:
 
 $ kind create cluster --name gitops --config cluster-config.yaml
 ```
-Example Output:
+Example Output (kind:v0.14.0/k8s:1.24.0 & kind:v0.17.0/k8s:v1.25.3):
 
 ```
 $ kind create cluster --name gitops --config cluster-config.yaml
@@ -69,6 +71,22 @@ kubectl cluster-info --context kind-gitops
 
 Have a nice day! 👋
 
+$ kind create cluster --name gitops --config cluster-config.yaml
+Creating cluster "gitops" ...
+ ✓ Ensuring node image (kindest/node:v1.25.3) 🖼 
+ ✓ Preparing nodes 📦 📦  
+ ✓ Writing configuration 📜 
+ ✓ Starting control-plane 🕹️ 
+ ✓ Installing StorageClass 💾 
+ ✓ Joining worker nodes 🚜 
+Set kubectl context to "kind-gitops"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-gitops
+
+Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
+
+
 $ docker ps -a
 CONTAINER ID        IMAGE                   COMMAND                  CREATED             STATUS              PORTS                                                                 NAMES
 b1f0d34833c0        kindest/node:v1.24.0    "/usr/local/bin/entr…"   24 minutes ago      Up 24 minutes       0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 127.0.0.1:36409->6443/tcp   devsecops-control-plane
@@ -76,6 +94,10 @@ b2dfe90a04cb        kindest/node:v1.24.0    "/usr/local/bin/entr…"   24 minute
 baea6d91feb6        kindest/node:v1.24.0    "/usr/local/bin/entr…"   27 minutes ago      Created                                                                                   kind-control-plane
 ff1679781bbc        kindest/node:v1.24.0    "/usr/local/bin/entr…"   27 minutes ago      Created                                                                                   kind-worker
 
+$ docker ps -a
+CONTAINER ID        IMAGE                   COMMAND                  CREATED             STATUS              PORTS                                                                 NAMES
+7b1116751270        kindest/node:v1.25.3    "/usr/local/bin/entr…"   32 minutes ago      Up 32 minutes       0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 127.0.0.1:40769->6443/tcp   gitops-control-plane
+a63e1717ef2c        kindest/node:v1.25.3    "/usr/local/bin/entr…"   32 minutes ago      Up 32 minutes                                                                             gitops-worker
 
 $ kind get kubeconfig --name="gitops" > admin.conf
 $ export KUBECONFIG=./admin.conf 
@@ -124,7 +146,7 @@ deployment.apps/calico-kube-controllers created
 serviceaccount/calico-kube-controllers created
 poddisruptionbudget.policy/calico-kube-controllers created
 
-$ kubectl -n kube-system set env daemonset/calico-node FELIX_IGNORELOOSERPF=true
+$ kubectl -n kube-system set env daemonset/calico-node FELIX_IGNORELOOSERPF=true (kind:v0.14.0/k8s:1.24.0 only)
 daemonset.apps/calico-node env updated
 
 $ kubectl get pods -n kube-system
@@ -148,10 +170,16 @@ calico-node-ggrfn                                 1/1     Running   0          4
 $ kubectl api-resources
 $ kubectl api-resources|head
 
-$ kubectl get node -o wide
+$ kubectl get node -o wide  (kind:v0.14.0/k8s:1.24.0)
 NAME                      STATUS   ROLES           AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE       KERNEL-VERSION     CONTAINER-RUNTIME
 devsecops-control-plane   Ready    control-plane   4h56m   v1.24.0   172.17.0.3    <none>        Ubuntu 21.10   5.0.0-32-generic   containerd://1.6.4
 devsecops-worker          Ready    <none>          4h56m   v1.24.0   172.17.0.2    <none>        Ubuntu 21.10   5.0.0-32-generic   containerd://1.6.4
+
+$ kubectl get node -o wide (kind:v0.17.0/k8s:v1.25.3)
+NAME                   STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION     CONTAINER-RUNTIME
+gitops-control-plane   Ready    control-plane   27m   v1.25.3   172.17.0.3    <none>        Ubuntu 22.04.1 LTS   5.0.0-32-generic   containerd://1.6.9
+gitops-worker          Ready    <none>          26m   v1.25.3   172.17.0.2    <none>        Ubuntu 22.04.1 LTS   5.0.0-32-generic   containerd://1.6.9
+
 
 ```
 
