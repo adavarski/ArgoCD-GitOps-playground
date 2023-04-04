@@ -35,16 +35,17 @@ $ curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.14.0/kind-linux-amd64 && chmod 
 $ curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.17.0/kind-linux-amd64 && chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind (Note: k8s v1.25.3)
 
 $ cd KIND/
+###Create k8s Cluster and get credentials
 $ kind create cluster --name gitops --config cluster-config.yaml
 $ kind get kubeconfig --name="gitops" > admin.conf
 $ export KUBECONFIG=./admin.conf 
-### https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart#install-calico
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/tigera-operator.yaml
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/custom-resources.yaml
-### Calico OLD 
+### Install Calico -> REF: https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart#install-calico
+$ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/tigera-operator.yaml
+$ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/custom-resources.yaml
+### Calico (OLD: N/A)
 $ kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 $ kubectl -n kube-system set env daemonset/calico-node FELIX_IGNORELOOSERPF=true (kind: v0.14.0 & k8s: v1.24.0 only)
-### Install Nginx ingress
+### Install Nginx Ingress
 $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 ```
 
