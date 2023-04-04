@@ -142,6 +142,16 @@ kube-system          kube-scheduler-gitops-control-plane            1/1     Runn
 local-path-storage   local-path-provisioner-684f458cdd-mxfmc        1/1     Running   0          14m
 tigera-operator      tigera-operator-6d85b97b7d-9hjn7               1/1     Running   0          5m34s
 
+$ kubectl get pods -n calico-system
+NAME                                       READY   STATUS    RESTARTS   AGE
+calico-kube-controllers-55d6d4648b-4qn6w   1/1     Running   0          11m
+calico-node-nrhl7                          1/1     Running   0          11m
+calico-node-qjcnj                          1/1     Running   0          11m
+calico-typha-5c9fbcffdc-69svv              1/1     Running   0          11m
+csi-node-driver-8jpqw                      2/2     Running   0          11m
+csi-node-driver-dkr42                      2/2     Running   0          11m
+
+
 $ kubectl get node -o wide
 NAME                   STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION     CONTAINER-RUNTIME
 gitops-control-plane   Ready    control-plane   20m   v1.25.3   172.18.0.2    <none>        Ubuntu 22.04.1 LTS   5.0.0-32-generic   containerd://1.6.9
