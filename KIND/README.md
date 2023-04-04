@@ -117,6 +117,33 @@ kube-proxy-4kcgw                                  1/1     Running   0          5
 kube-proxy-phc5j                                  1/1     Running   0          5m2s
 kube-scheduler-devsecops-control-plane            1/1     Running   0          5m19s
 
+### https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart#install-calico
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/tigera-operator.yaml
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/custom-resources.yaml
+
+$ kubectl get po --all-namespaces
+NAMESPACE            NAME                                           READY   STATUS    RESTARTS   AGE
+calico-apiserver     calico-apiserver-77987cff4d-kxxw5              1/1     Running   0          2m56s
+calico-apiserver     calico-apiserver-77987cff4d-tl4pz              1/1     Running   0          2m56s
+calico-system        calico-kube-controllers-55d6d4648b-4qn6w       1/1     Running   0          5m17s
+calico-system        calico-node-nrhl7                              1/1     Running   0          5m17s
+calico-system        calico-node-qjcnj                              1/1     Running   0          5m17s
+calico-system        calico-typha-5c9fbcffdc-69svv                  1/1     Running   0          5m17s
+calico-system        csi-node-driver-8jpqw                          2/2     Running   0          5m17s
+calico-system        csi-node-driver-dkr42                          2/2     Running   0          5m17s
+kube-system          coredns-565d847f94-k4cv5                       1/1     Running   0          14m
+kube-system          coredns-565d847f94-sbdh9                       1/1     Running   0          14m
+kube-system          etcd-gitops-control-plane                      1/1     Running   0          15m
+kube-system          kube-apiserver-gitops-control-plane            1/1     Running   0          14m
+kube-system          kube-controller-manager-gitops-control-plane   1/1     Running   0          15m
+kube-system          kube-proxy-59nrb                               1/1     Running   0          14m
+kube-system          kube-proxy-d9dpt                               1/1     Running   0          14m
+kube-system          kube-scheduler-gitops-control-plane            1/1     Running   0          15m
+local-path-storage   local-path-provisioner-684f458cdd-mxfmc        1/1     Running   0          14m
+tigera-operator      tigera-operator-6d85b97b7d-9hjn7               1/1     Running   0          5m34s
+
+
+// Example OLD calico
 $ kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 configmap/calico-config created
 customresourcedefinition.apiextensions.k8s.io/bgpconfigurations.crd.projectcalico.org created
