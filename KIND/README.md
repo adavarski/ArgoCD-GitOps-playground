@@ -117,9 +117,9 @@ kube-proxy-4kcgw                                  1/1     Running   0          5
 kube-proxy-phc5j                                  1/1     Running   0          5m2s
 kube-scheduler-devsecops-control-plane            1/1     Running   0          5m19s
 
-### https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart#install-calico
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/tigera-operator.yaml
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/custom-resources.yaml
+### Install Calico CNI: https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart#install-calico
+$ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/tigera-operator.yaml
+$ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/custom-resources.yaml
 
 $ kubectl get po --all-namespaces
 NAMESPACE            NAME                                           READY   STATUS    RESTARTS   AGE
@@ -221,7 +221,6 @@ $ kubectl get node -o wide (kind:v0.17.0/k8s:v1.25.3)
 NAME                   STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION     CONTAINER-RUNTIME
 gitops-control-plane   Ready    control-plane   27m   v1.25.3   172.17.0.3    <none>        Ubuntu 22.04.1 LTS   5.0.0-32-generic   containerd://1.6.9
 gitops-worker          Ready    <none>          26m   v1.25.3   172.17.0.2    <none>        Ubuntu 22.04.1 LTS   5.0.0-32-generic   containerd://1.6.9
-
 
 ```
 
