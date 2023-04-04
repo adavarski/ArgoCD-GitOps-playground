@@ -158,7 +158,7 @@ gitops-control-plane   Ready    control-plane   20m   v1.25.3   172.18.0.2    <n
 gitops-worker          Ready    <none>          19m   v1.25.3   172.18.0.3    <none>        Ubuntu 22.04.1 LTS   5.0.0-32-generic   containerd://1.6.9
 
 
-// Example OLD calico
+// Note: Example Calico (OLD: N/A)
 $ kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 configmap/calico-config created
 customresourcedefinition.apiextensions.k8s.io/bgpconfigurations.crd.projectcalico.org created
