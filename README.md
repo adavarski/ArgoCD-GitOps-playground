@@ -337,7 +337,7 @@ GROUP  KIND        NAMESPACE  NAME                            STATUS  HEALTH   H
 apps   Deployment  default    test-prod-cluster-helm-example  Synced  Healthy        deployment.apps/test-prod-cluster-helm-example created
 
 ```
-### Clean environment
+### Clean local environment
 ```
 $ kind delete cluster --name=gitops
 $ kind delete cluster --name=prod
