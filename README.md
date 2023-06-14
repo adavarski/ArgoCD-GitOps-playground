@@ -5,6 +5,11 @@ Implementing GitOps with GitHub Actions (GitOps CI) and ArgoCD (GitOps CD) to de
 
 <img src="pictures/gitops-demo-all.webp?raw=true" width="1000">
 
+### GitHub Actions configure
+Settings -> Developer settings -> Personal access tokens -> Create ARGOCD 
+Actions secrets and variables -> Add ARGOCD variable with value above PAT
+Repo Settings -> Actions -> Genreal -> Workflow permissions -> Check Read and write permissions & Allow GH Actions to approve PR
+
 ## Demo1 (simple, monorepo, KIND: single k8s cluster, NO Production-Like Deployment Strategy)
 
 **Note**: Very simple monorepo for CI & CD (no separate app/s:CI and config:CD repo/s:ArgoCD apps manifests). See **[CI/CD GitOps Notes](./README-Notes.md)** for Production-Like Deployment Strategy. 
