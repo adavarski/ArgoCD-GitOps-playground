@@ -347,4 +347,5 @@ apps   Deployment  default    test-prod-cluster-helm-example  Synced  Healthy   
 $ kind delete cluster --name=gitops
 $ kind delete cluster --name=prod
 ```
-### Note:  https://github.com/adavarski/gitops-k3d-tekton-argocd (example -> using Tekton instead of GitHub Actions to build/push docker images)
+Note. Using Tekton instead of GitHub Actions to build/push docker images:
+https://github.com/adavarski/gitops-k3d-tekton-argocdRef:  
