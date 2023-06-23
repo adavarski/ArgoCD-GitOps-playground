@@ -225,7 +225,7 @@ Deployment Strategy (Production-Like):
 
 Note: Production-like GitFlow branching strategy example: 
 
-<img src="pictures/2-git-glow_branching_strategy.png?raw=true" width="1000">
+<img src="pictures/GIT-2-git-glow_branching_strategy.png?raw=true" width="800">
 
 <img src="pictures/gitops-dev-prod.png?raw=true" width="1000">
 
