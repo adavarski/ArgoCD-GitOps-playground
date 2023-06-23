@@ -223,6 +223,7 @@ Deployment Strategy (Production-Like):
 
 <img src="pictures/Deployment-Strategy-KIND.png?raw=true" width="1000">
 
+<img src="pictures/devops.png?raw=true" width="1000">
 
 ### Create production cluster
 ```
