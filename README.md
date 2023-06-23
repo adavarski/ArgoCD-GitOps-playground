@@ -223,7 +223,9 @@ Deployment Strategy (Production-Like):
 
 <img src="pictures/Deployment-Strategy-KIND.png?raw=true" width="1000">
 
-<img src="pictures/gitops.png?raw=true" width="1000">
+GitFlow branching strategy example: 
+
+<img src="pictures/gitops-dev-prod.png?raw=true" width="1000">
 
 ### Create production cluster
 ```
