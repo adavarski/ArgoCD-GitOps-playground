@@ -384,3 +384,7 @@ $ kind delete cluster --name=prod
 Note: Using Tekton instead of GitHub Actions to build/test/push docker images example -> REF:
 - https://github.com/adavarski/GitOps-k3d-Tekton-ArgoCD-Go (Golang example)
 - https://github.com/adavarski/gitops-k3d-tekton-argocd (Java:Maven example)
+
+Note: Other GitHub Actions and ArgoCD examples:
+- https://github.com/adavarski/k3d-GH-Actions
+- https://github.com/adavarski/homelab
