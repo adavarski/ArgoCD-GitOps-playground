@@ -1,7 +1,7 @@
 ## GitOps: CI/CD using GitHub Actions and ArgoCD on Kubernetes 
 
-[![test](https://github.com/adavarski/ArgoCD-GitOps-playground/workflows/main/badge.svg)](https://github.com/adavarski/ArgoCD-GitOps-playground/actions)
-[![prod](https://github.com/adavarski/ArgoCD-GitOps-playground/workflows/prod/badge.svg)](https://github.com/adavarski/ArgoCD-GitOps-playground/actions)
+[![CI](https://github.com/adavarski/ArgoCD-GitOps-playground/workflows/main/badge.svg)](https://github.com/adavarski/ArgoCD-GitOps-playground/actions)
+[![release](https://github.com/adavarski/ArgoCD-GitOps-playground/workflows/prod/badge.svg)](https://github.com/adavarski/ArgoCD-GitOps-playground/actions)
 
 
 **Objective:** 
